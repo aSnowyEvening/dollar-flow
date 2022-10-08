@@ -42,9 +42,9 @@
         <!-- Otherwise if we have a token, show the budget select -->
         <Budgets v-else-if="!budgetId" :budgets="budgets" :selectBudget="selectBudget" />
 
-        <!-- If a budget has been selected, display transactions from that budget -->
+        <!-- If a budget has been selected, display categories from that budget -->
         <div v-else>
-          <Transactions :transactions="transactions" />
+          <Categories :categories="categories" />
           <button class="btn btn-info" @click="budgetId = null">&lt; Select Another Budget</button>
         </div>
 
@@ -67,6 +67,7 @@ import Nav from './components/Nav.vue';
 import Footer from './components/Footer.vue';
 import Budgets from './components/Budgets.vue';
 import Transactions from './components/Transactions.vue';
+import Categories from './components/Categories.vue';
 
 export default {
   // The data to feed our templates
@@ -83,10 +84,11 @@ export default {
       budgetId: null,
       budgets: [],
       transactions: [],
+      categories: [],
     }
   },
   // When this component is created, check whether we need to get a token,
-  // budgets or display the transactions
+  // budgets or display the categories
   created() {
     this.ynab.token = this.findYNABToken();
     if (this.ynab.token) {
@@ -111,14 +113,14 @@ export default {
         this.loading = false;
       });
     },
-    // This selects a budget and gets all the transactions in that budget
+    // This selects a budget and gets all the categoriess in that budget
     selectBudget(id) {
       this.loading = true;
       this.error = null;
       this.budgetId = id;
-      this.transactions = [];
-      this.api.transactions.getTransactions(id).then((res) => {
-        this.transactions = res.data.transactions;
+      this.categories = [];
+      this.api.categories.getCategories(id).then((res) => {
+        this.categories = res.data.categories;
       }).catch((err) => {
         this.error = err.error.detail;
       }).finally(() => {
@@ -163,7 +165,8 @@ export default {
     Nav,
     Footer,
     Budgets,
-    Transactions
+    Transactions,
+    Categories
   }
 }
 </script>
